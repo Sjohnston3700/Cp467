@@ -1,7 +1,0 @@
-package a1;
-
-public class Image {
-	public Image(String fileLocaton) {
-
-	}
-}
