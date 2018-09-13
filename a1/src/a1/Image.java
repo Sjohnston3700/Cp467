@@ -1,6 +1,7 @@
 package a1;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -155,7 +156,6 @@ public class Image {
 	private void createNewConvolutedImage(String newFileName) {
 		BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	
-		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				int value = computedGrayScales[y * width + x];
@@ -170,6 +170,9 @@ public class Image {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		ImageJPanel imageJpanel = new ImageJPanel(image, newImage);
+		imageJpanel.displayImage();
 	} 
 
 	private void storeGrayValues() {
