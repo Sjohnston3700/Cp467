@@ -1,0 +1,13 @@
+package a1;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+public class Image {
+	private BufferedImage image;
+	public Image(String fileLocaton) {
+		BufferedImage image = ImageIO.read(new File(fileLocation));
+	}
+}

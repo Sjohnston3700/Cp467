@@ -1,0 +1,26 @@
+package a1;
+
+import java.awt.image.BufferedImage;
+import java.net.URL;
+//from  w ww  .  ja  va  2s  . c  o  m
+import javax.imageio.ImageIO;
+
+public class Main {
+  public static void main(final String args[]) throws Exception {
+    URL url = new URL("cat.jpg");
+    BufferedImage image = ImageIO.read(new File("cat.jpg"));
+
+    for (int x = 0; x < image.getWidth(); x++) {
+      for (int y = 0; y < image.getHeight(); y++) {
+        int clr = image.getRGB(x, y);
+        int red = (clr & 0x00ff0000) >> 16;
+        int green = (clr & 0x0000ff00) >> 8;
+        int blue = clr & 0x000000ff;
+
+        System.out.println("Red Color value = " + red);
+        System.out.println("Green Color value = " + green);
+        System.out.println("Blue Color value = " + blue);
+      }
+    }
+  }
+}

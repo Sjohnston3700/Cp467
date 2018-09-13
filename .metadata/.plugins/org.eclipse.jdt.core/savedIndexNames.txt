@@ -1,0 +1,2 @@
+INDEX VERSION 1.130+E:\Sarah\Documents\code\eclipse_workspace\image_processing\.metadata\.plugins\org.eclipse.jdt.core
+3084866586.index

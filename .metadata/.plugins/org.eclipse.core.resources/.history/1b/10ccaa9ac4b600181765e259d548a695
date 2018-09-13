@@ -1,0 +1,41 @@
+package a1;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class Image {
+	private BufferedImage image;
+	private int width;
+	private int height;
+
+	public Image(String fileLocation) {
+		try {
+			image = ImageIO.read(new File(fileLocation));
+			width = image.getWidth();
+			height = image.getHeight();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public BufferedImage getImage() {
+		return image;
+	}
+	
+	public void print() {
+		for (int x = 0; x < width; x++) {
+		  for (int y = 0; y < height; y++) {
+		    int p = image.getRGB(x,y);
+		    int a = (p>>24)&0xff;
+		    int r = (p>>16)&0xff;
+		    int g = (p>>8)&0xff;
+		    int b = p&0xff;
+		    System.out.println(clr);
+		
+		  }
+	    }
+	}
+}
