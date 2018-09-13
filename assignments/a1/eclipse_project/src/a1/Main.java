@@ -12,6 +12,6 @@ public class Main {
 	// Blur
 	float[] operator = { 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
     Image image = new Image("cat.jpg");
-    image.convoluteImage(operator, "image_convoluated.jpg");
+    image.convoluteImage(operator, "image_altered.jpg");
   }
 }
