@@ -7,8 +7,9 @@ import javax.imageio.ImageIO;
 
 public class Main {
   public static void main(final String args[]) throws Exception {
-	float[] operator = { 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f } ;
+	// Operator for sharpening
+	float[] operator = { 0, -1, 0, -1, 5f, -1, 0, -1, 0 };
     Image image = new Image("cat.jpg");
-    image.convoluteImage(operator);
+    image.convoluteImage(operator, "image_convoluated.jpg");
   }
 }
