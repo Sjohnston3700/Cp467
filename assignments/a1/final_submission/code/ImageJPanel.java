@@ -1,9 +1,8 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import javax.imageio.ImageIO;
 import javax.swing.*;
  
+@SuppressWarnings("serial")
 public class ImageJPanel extends JPanel {
     BufferedImage original;
     BufferedImage altered;
