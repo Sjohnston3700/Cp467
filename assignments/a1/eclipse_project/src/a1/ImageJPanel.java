@@ -17,15 +17,15 @@ public class ImageJPanel extends JPanel {
 
     protected void displayImage() {
         JPanel panel = new JPanel();
-        
+               
         JLabel label = new JLabel(new ImageIcon(original));
         panel.add(label);
         
         JLabel label2 = new JLabel(new ImageIcon(altered));
         panel.add(label2);
-     
+           
         JFrame.setDefaultLookAndFeelDecorated(true);
-        JFrame frame = new JFrame("Altered Image");
+        JFrame frame = new JFrame("Original -> Altered Image");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
      
         frame.add(panel); 

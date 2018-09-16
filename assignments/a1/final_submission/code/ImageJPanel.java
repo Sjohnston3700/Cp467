@@ -23,7 +23,7 @@ public class ImageJPanel extends JPanel {
         panel.add(label2);
      
         JFrame.setDefaultLookAndFeelDecorated(true);
-        JFrame frame = new JFrame("Altered Image");
+        JFrame frame = new JFrame("Original -> Altered Image");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
      
         frame.add(panel); 
