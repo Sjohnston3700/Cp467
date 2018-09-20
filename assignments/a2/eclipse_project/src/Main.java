@@ -1,5 +1,3 @@
-package a1;
-
 public class Main {
   public static void main(final String args[]) throws Exception {
 	// Sharpen
@@ -9,6 +7,6 @@ public class Main {
 	float[] operator = { 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
 
     Image image = new Image("cat.jpg");
-    image.convoluteImage(operator, "image_altered.jpg");
+    image.makeImageBlackAndWhite("image_altered.jpg");
   }
 }
