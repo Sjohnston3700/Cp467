@@ -7,24 +7,33 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
  
 public class ImageJPanel extends JPanel {
-    BufferedImage original;
-    BufferedImage altered;
-    Dimension size = new Dimension();
- 
-    public ImageJPanel(BufferedImage originalImage, BufferedImage altertedImage) {
-        original = originalImage;
-        altered = altertedImage;
+    BufferedImage left, right;
+    
+    public ImageJPanel(String leftImageFilename, String rightImageFilename) throws IOException {
+        left = ImageIO.read(new File(leftImageFilename));
+        
+        if (rightImageFilename != null) {
+        	right = ImageIO.read(new File(rightImageFilename));
+        }
+    }
+    
+    public ImageJPanel(String leftImageFilename) throws IOException {
+        this(leftImageFilename, null);
     }
 
-    protected void displayImage() {
+    public void display() {
         JPanel panel = new JPanel();
         
-        JLabel label = new JLabel(new ImageIcon(original));
-        panel.add(label);
+        if (left != null) {
+        	JLabel label = new JLabel(new ImageIcon(left));
+            panel.add(label);
+        }
         
-        JLabel label2 = new JLabel(new ImageIcon(altered));
-        panel.add(label2);
-     
+        if (right != null) {
+        	 JLabel label2 = new JLabel(new ImageIcon(right));
+             panel.add(label2);
+        }
+        
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame("Altered Image");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
