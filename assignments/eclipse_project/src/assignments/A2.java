@@ -4,6 +4,8 @@ import java.util.Map;
 
 public class A2 {	
 	
+	private A2() {}
+	
 	public static void run(String imageFilename) {
 		Image orig = new Image(imageFilename);
 		
@@ -17,10 +19,5 @@ public class A2 {
 			i++;
 		}
 	}
-	
-	
-	
-	
-	
 	
 }
