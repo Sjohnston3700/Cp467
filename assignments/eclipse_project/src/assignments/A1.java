@@ -8,10 +8,10 @@ public class A1 {
 	
 	public static void run(String originalFilename, float[] operator, String newFilename) throws IOException {
 		Image orig = new Image(originalFilename);
-		Image gs = orig.getGrayscaleImage();
+		GreyscaleImage gs = new GreyscaleImage(orig);
 		
-		Image filtered = gs.getFilteredImage(operator);
-		filtered.saveGrayscaleToFile(newFilename);
+		GreyscaleImage filtered = gs.getFilteredImage(operator);
+		filtered.saveToFile(newFilename);
 		
 		ImageJPanel viewer = new ImageJPanel(originalFilename, newFilename);
 		viewer.display();

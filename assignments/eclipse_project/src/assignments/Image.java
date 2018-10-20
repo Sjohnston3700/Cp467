@@ -1,9 +1,9 @@
 package assignments;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 public class Image {
@@ -69,32 +69,12 @@ public class Image {
 		data[y * width + x] = value;
 	}
 	
-	public Image getGrayscaleImage() {
-		Image gs = new Image(width, height);
+	public void saveToFile(String filename) {
+		BufferedImage newImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-			    int p = getCoordinateValue(x, y);
-			    
-			    int r = (p>>16)&0xff;
-			    int g = (p>>8)&0xff;
-			    int b = p&0xff;
-			    int grayScaleValue = (r + g + b) / 3;
-			    gs.assignValue(x, y, grayScaleValue);
-			}
-	    }
-		
-		return gs;
-	}
-	
-	public void saveGrayscaleToFile(String filename) {
-		BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				int value = Math.max(Math.min(getCoordinateValue(x, y), WHITE), BLACK);
-				int rgb = new Color(value, value, value).getRGB();
-				newImage.setRGB(x, y, rgb);
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				newImage.setRGB(x, y, getCoordinateValue(x, y));
 			}
 	    }
 		
@@ -108,7 +88,7 @@ public class Image {
 	public void printImage() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				System.out.print(data[y * width + x] + " ");
+				System.out.print(getCoordinateValue(x, y) + " ");
 			}
 			System.out.println();
 		}
@@ -116,24 +96,7 @@ public class Image {
 	
 	/* ----- A1 FUNCTIONS ----- */
 	
-	public Image getFilteredImage(float[] operator) {
-		Image filtered = new Image(width, height);
-		int fillerValue = 0;
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				int[] temp = getThreeByThreePixelBlock(x, y, fillerValue);
-				int sum = 0;
-				for (int i = 0; i < operator.length; i++) {
-					sum += temp[i] * operator[i];
-				}
-				filtered.assignValue(x, y, sum);
-			}
-		}
-		
-		return filtered;
-	}
-	
-	private int[] getThreeByThreePixelBlock(int x, int y, int fillerValue) {
+	protected int[] getThreeByThreePixelBlock(int x, int y, int fillerValue) {
 		int[] temp = new int[9];
 		
 		int index = 0;
@@ -149,13 +112,118 @@ public class Image {
 		return temp;
 	}
 	
-	/* ----- A2 FUNCTIONS ----- */
+	/* ----- A4 FUNCTIONS ----- */
 	
-	public boolean isBackground(int x, int y) {
-		return isBackground(x, y, 0);
+	protected class ImageBounds {
+		private int minX, minY, maxX, maxY;
+		
+		public ImageBounds(int x, int y) {
+			this(x, y, x, y);
+		}
+
+		public ImageBounds(int minX, int minY, int maxX, int maxY) {
+			setMaxX(maxX);
+			setMaxY(maxY);
+			setMinX(minX);
+			setMinY(minY);
+		}
+		
+		public int getMinY() {
+			return minY;
+		}
+
+		public void setMinY(int minY) {
+			if (minY > maxY) {
+				throw new IllegalArgumentException("minY cannot be greater than maxY!");
+			}
+			
+			this.minY = minY;
+		}
+
+		public int getMaxY() {
+			return maxY;
+		}
+
+		public void setMaxY(int maxY) {
+			if (maxY < minY) {
+				throw new IllegalArgumentException("minY cannot be greater than maxY!");
+			}
+			
+			this.maxY = maxY;
+		}
+
+		public int getMinX() {
+			return minX;
+		}
+
+		public void setMinX(int minX) {
+			if (minX > maxX) {
+				throw new IllegalArgumentException("minX cannot be greater than maxX!");
+			}
+			
+			this.minX = minX;
+		}
+
+		public int getMaxX() {
+			return maxX;
+		}
+
+		public void setMaxX(int maxX) {
+			if (maxX < minX) {
+				throw new IllegalArgumentException("minX cannot be greater than maxX!");
+			}
+			
+			this.maxX = maxX;
+		}
+		
+		public void addPoint(int x, int y) {			
+			if (x > maxX)
+				setMaxX(x);
+			
+			if (y > maxY)
+				setMaxY(y);
+			
+			if (x < minX)
+				setMinX(x);
+			
+			if (y < minY)
+				setMinY(y);
+		}
+		
+		public int getWidth() {
+			return maxX - minX + 1;
+		}
+		
+		public int getHeight() {
+			return maxY - minY + 1;
+		}
+		
+		public int getCenterX() {
+			return minX + getWidth() / 2;
+		}
+		
+		public int getCenterY() {
+			return minY + getHeight() / 2;
+		}
 	}
 	
-	public boolean isBackground(int x, int y, int tolerance) {
-		return Math.abs(WHITE - data[y * width + x]) <= tolerance;		
+	protected void clearArea(ImageBounds b) {
+		assignArea(b, INVALID);
+	}
+	
+	protected void assignArea(ImageBounds b, int value) {
+		for (int y = Math.max(b.getMinY(), 0); y < Math.min(b.getMaxY() + 1, getHeight()); y++) {
+			for (int x = Math.max(b.getMinX(), 0); x < Math.min(b.getMaxX() + 1, getWidth()); x++) {
+				assignValue(x, y, value);
+			}
+		}
+	}
+	
+	protected void insertImage(Image img, int originX, int originY) {
+		for (int y = 0; y < img.getHeight() && y + originY < getHeight(); y++) {
+			for (int x = 0; x < img.getWidth() && x + originX < getWidth(); x++) {
+				assignValue(x + originX, y + originY, img.getCoordinateValue(x, y));
+			}
+		}
 	}
 }

@@ -8,8 +8,9 @@ public class A2 {
 	
 	public static void run(String imageFilename) {
 		Image orig = new Image(imageFilename);
+		GreyscaleImage gs = new GreyscaleImage(orig);
 		
-		SegmentedImage labels = new SegmentedImage(orig);
+		SegmentedImage labels = new SegmentedImage(gs);
 		
 		Map<Integer, Integer> segments = labels.getNumberPixelsPerSegment();
 		

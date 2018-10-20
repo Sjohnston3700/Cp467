@@ -11,10 +11,9 @@ public class SegmentedImage extends Image {
 	
 	private static final int WHITE_TOLERANCE = 150;
 	
-	public SegmentedImage(Image orig) {
-		super(orig.getWidth(), orig.getHeight());
+	public SegmentedImage(GreyscaleImage gs) {
+		super(gs.getWidth(), gs.getHeight());
 		
-		Image gs = orig.getGrayscaleImage();
 		int currentLabel = -1;
 		
 		List<Set<Integer>> linked = new ArrayList<>();
@@ -60,6 +59,7 @@ public class SegmentedImage extends Image {
 			}
 		}
 	}
+
 	
 	public int[] getProcessedNeighboringValues(int x, int y) {
 		int[] values = new int[4];
@@ -72,9 +72,8 @@ public class SegmentedImage extends Image {
 		return values;
 	}
 	
-	@Override
-	public Image getGrayscaleImage() {
-		Image gs = new Image(getWidth(), getHeight());
+	public GreyscaleImage getGrayscaleImage() {
+		GreyscaleImage gs = new GreyscaleImage(getWidth(), getHeight());
 		
 		for (int y = 0; y < getHeight(); y++) {
 			for (int x = 0; x < getWidth(); x++) {
@@ -86,6 +85,11 @@ public class SegmentedImage extends Image {
 	    }
 		
 		return gs;
+	}
+	
+	@Override
+	public void saveToFile(String filename) {
+		getGrayscaleImage().saveToFile(filename);
 	}
 	
 	private static boolean hasValidValue(int[] data) {
@@ -139,5 +143,44 @@ public class SegmentedImage extends Image {
 		}
 		
 		return segments;
+	}
+	
+	/* ----- A4 FUNCTIONS ----- */
+	
+	public GreyscaleImage scaleSegments(float scaleFactor) {
+		GreyscaleImage orig = getGrayscaleImage();
+		GreyscaleImage processed = getGrayscaleImage();
+		
+		for (ImageBounds bounds : computeSegmentBounds()) {
+			GreyscaleImage sub = orig.getSubImage(bounds);
+			GreyscaleImage scaled = sub.getScaledImage(scaleFactor);
+			
+			processed.assignArea(bounds, WHITE);
+			processed.insertImage(scaled, bounds.getMinX(), bounds.getMinY());
+		}
+		
+		return processed;
+	}
+	
+	private List<ImageBounds> computeSegmentBounds() {
+		Map<Integer, ImageBounds> bounds = new HashMap<>();
+		
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				int val = getCoordinateValue(x, y);
+				if (val != INVALID) {
+					ImageBounds b = bounds.get(val);
+					
+					if (b == null) {
+						b = new ImageBounds(x, y);
+						bounds.put(val, b);
+					}
+					
+					b.addPoint(x, y);
+				}
+			}
+		}
+		
+		return new ArrayList<>(bounds.values());
 	}
 }
