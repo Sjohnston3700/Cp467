@@ -9,8 +9,6 @@ import java.util.Set;
 
 public class SegmentedImage extends Image {
 	
-	private static final int WHITE_TOLERANCE = 150;
-	
 	public SegmentedImage(GreyscaleImage gs) {
 		super(gs.getWidth(), gs.getHeight());
 		

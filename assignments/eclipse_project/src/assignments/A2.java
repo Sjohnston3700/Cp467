@@ -1,17 +1,18 @@
 package assignments;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class A2 {	
 	
 	private A2() {}
 	
-	public static void run(String imageFilename) {
-		Image orig = new Image(imageFilename);
-		GreyscaleImage gs = new GreyscaleImage(orig);
+	public static void run(String originalFilename, String destFilename) throws IOException {
+		Image orig = new Image(originalFilename);
+		GreyscaleImage bAndW = new GreyscaleImage(orig);
+		bAndW.convertToBW();
 		
-		SegmentedImage labels = new SegmentedImage(gs);
-		
+		SegmentedImage labels = new SegmentedImage(bAndW);
 		Map<Integer, Integer> segments = labels.getNumberPixelsPerSegment();
 		
 		int i = 1;
@@ -19,6 +20,11 @@ public class A2 {
 			System.out.println("Segment " + i + " has " + segments.get(key) + " black pixels.");
 			i++;
 		}
+		
+		bAndW.saveToFile(destFilename);
+		
+		ImageJPanel viewer = new ImageJPanel(originalFilename, destFilename);
+		viewer.display();
 	}
 	
 }

@@ -10,6 +10,7 @@ public class Image {
 	protected static final int BLACK = 0;
 	protected static final int WHITE = 255;
 	protected static final int INVALID = -1;
+	protected static final int WHITE_TOLERANCE = 150;
 	
 	private int[] data;
 	private int width, height;

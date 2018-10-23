@@ -8,7 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class GreyscaleImage extends Image {
-
+	
 	public GreyscaleImage(int width, int height) {
 		super(width, height);
 	}
@@ -76,6 +76,15 @@ public class GreyscaleImage extends Image {
 	
 	public boolean isBackground(int x, int y, int tolerance) {
 		return Math.abs(WHITE - getCoordinateValue(x, y)) <= tolerance;		
+	}
+	
+	public void convertToBW() {
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				int value = (isBackground(x, y, WHITE_TOLERANCE)) ? WHITE : BLACK;
+				assignValue(x, y, value);
+			}
+	    }
 	}
 	
 	/* ----- A4 FUNCTIONS ----- */
