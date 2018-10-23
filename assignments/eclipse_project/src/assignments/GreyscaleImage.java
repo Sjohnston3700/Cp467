@@ -143,4 +143,18 @@ public class GreyscaleImage extends Image {
 		return scaled;
 	}
 	
+	/* ----- A5 FUNCTIONS ----- */
+	
+	public calculateZoningFeature(float xStart, float xEnd, float yStart, float yEnd) {
+		float zoningFeature = 0;
+		
+		float xStartRemainder = (float) (xStart % Math.ceil(xStart));
+		if (xStartRemainder != 0) {
+			for (int y = 0; y < Math.floor(yEnd); y++) {
+				
+			}
+		}
+		
+	}
+	
 }

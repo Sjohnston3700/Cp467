@@ -181,4 +181,29 @@ public class SegmentedImage extends Image {
 		
 		return new ArrayList<>(bounds.values());
 	}
+	
+	/* ----- A5 FUNCTIONS ----- */
+	
+	public List<ArrayList<Float>> calculateZoningFVs() {
+		List<ArrayList<Float>> zoningFVs = new ArrayList<ArrayList<Float>>();
+		GreyscaleImage orig = getGrayscaleImage();
+		
+		for (ImageBounds bounds : computeSegmentBounds()) {
+			ArrayList<Float> zoningFeatures = new ArrayList<Float>(9);
+			zoningFVs.add(zoningFeatures);
+			
+			GreyscaleImage segment = orig.getSubImage(bounds);
+			float zoneWidth = segment.getWidth()/3;
+			float zoneHeight = segment.getHeight()/3;
+			
+			for (int y = 0; y < 3; y++) {
+				for (int x = 0; x < 3; x++) {
+					float zoningFeature = segment.calculateZoningFeature(zoneWidth*x, zoneWidth*(x+1), zoneHeight*y, zoneHeight*(y+1));
+					zoningFeatures.add(zoningFeature);
+				}
+			}
+		}
+		
+		return zoningFVs;
+	}
 }

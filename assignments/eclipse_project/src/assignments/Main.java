@@ -15,7 +15,7 @@ public class Main {
 
 		///////////////////////////// A2 //////////////////////////
 
-		// A2.run("segments2.jpg", "segments2_b&w.jpg");
+		// A2.run("segments2.jpg");
 
 		////////////////////////////////////////////////////////////
 
@@ -25,6 +25,8 @@ public class Main {
 
 		////////////////////////////////////////////////////////////
 
-		 A4.run("segments2.jpg", 0.5f, "segments0_75.jpg");
+		// A4.run("segments2.jpg", 0.5f, "segments0_75.jpg");
+		
+		// A5.run("segments2.jpg", 0.5f, "segments0_75.jpg");
 	}
 }
