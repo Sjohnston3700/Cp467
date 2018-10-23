@@ -184,6 +184,8 @@ public class SegmentedImage extends Image {
 	
 	/* ----- A5 FUNCTIONS ----- */
 	
+	//calculate zoning feature vectors for each segment
+	//3x3 zones
 	public List<ArrayList<Float>> calculateZoningFVs() {
 		List<ArrayList<Float>> zoningFVs = new ArrayList<ArrayList<Float>>();
 		GreyscaleImage orig = getGrayscaleImage();
@@ -193,8 +195,8 @@ public class SegmentedImage extends Image {
 			zoningFVs.add(zoningFeatures);
 			
 			GreyscaleImage segment = orig.getSubImage(bounds);
-			float zoneWidth = segment.getWidth()/3;
-			float zoneHeight = segment.getHeight()/3;
+			float zoneWidth = (float) segment.getWidth()/3;
+			float zoneHeight = (float) segment.getHeight()/3;
 			
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 3; x++) {

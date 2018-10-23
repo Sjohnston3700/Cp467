@@ -27,6 +27,6 @@ public class Main {
 
 		// A4.run("segments2.jpg", 0.5f, "segments0_75.jpg");
 		
-		// A5.run("segments2.jpg", 0.5f, "segments0_75.jpg");
+		A5.run("2someWhite.jpg");
 	}
 }

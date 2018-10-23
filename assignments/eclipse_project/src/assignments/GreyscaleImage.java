@@ -145,16 +145,80 @@ public class GreyscaleImage extends Image {
 	
 	/* ----- A5 FUNCTIONS ----- */
 	
-	public calculateZoningFeature(float xStart, float xEnd, float yStart, float yEnd) {
-		float zoningFeature = 0;
+	//assumes b&w
+	//calculates ratio of black to white pixels
+	public float calculateZoningFeature(float xStart, float xEnd, float yStart, float yEnd) {
+		float blackSum = 0;
+		int xStartFloor = (int) Math.floor(xStart);
+		int xStartCeil = (int) Math.ceil(xStart);
+		int xEndFloor = (int) Math.floor(xEnd);
+		int xEndCeil = (int) Math.ceil(xEnd);
+		int yStartFloor = (int) Math.floor(yStart);
+		int yStartCeil = (int) Math.ceil(yStart);
+		int yEndFloor = (int) Math.floor(yEnd);
+		int yEndCeil = (int) Math.ceil(yEnd);
 		
-		float xStartRemainder = (float) (xStart % Math.ceil(xStart));
+		//calculate sum of left fraction
+		float xStartRemainder = xStartCeil - xStart;
 		if (xStartRemainder != 0) {
-			for (int y = 0; y < Math.floor(yEnd); y++) {
-				
+			for (int y = yStartCeil; y < yEndFloor; y++) {
+				blackSum += (getCoordinateValue(xStartFloor, y) == 0) ? xStartRemainder : 0;
 			}
 		}
 		
-	}
-	
+		//calculate sum of right fraction
+		float xEndRemainder = xEnd - xEndFloor;
+		if (xEndRemainder != 0) {
+			for (int y = yStartCeil; y < yEndFloor; y++) {
+				blackSum += (getCoordinateValue(xEndFloor, y) == 0) ? xEndRemainder : 0;
+			}
+		}
+		
+		//calculate sum of top fraction
+		float yStartRemainder = yStartCeil - yStart;
+		if (yStartRemainder != 0) {
+			for (int x = xStartCeil; x < xEndFloor; x++) {
+				blackSum += (getCoordinateValue(x, yStartFloor) == 0) ? yStartRemainder : 0;
+			}
+		}
+		
+		//calculate sum of bottom fraction
+		float yEndRemainder = yEnd - yEndFloor;
+		if (yEndRemainder != 0) {
+			for (int x = xStartCeil; x < xEndFloor; x++) {
+				blackSum += (getCoordinateValue(x, yEndFloor) == 0) ? yEndRemainder : 0;
+			}
+		}
+		
+		//add top left fraction
+		if (xStartRemainder != 0 && yStartRemainder != 0) {
+			blackSum += (getCoordinateValue(xStartFloor, yStartFloor) == 0) ? yStartRemainder * xStartRemainder : 0;
+		}
+		
+		//add top right fraction
+		if (xEndRemainder != 0 && yStartRemainder != 0) {
+			blackSum += (getCoordinateValue(xEndCeil, yStartFloor) == 0) ? yStartRemainder * xEndRemainder : 0;
+		}
+		
+		//add bottom left fraction
+		if (xStartRemainder != 0 && yEndRemainder != 0) {
+			blackSum += (getCoordinateValue(xStartFloor, yEndCeil) == 0) ? yEndRemainder * xStartRemainder : 0;
+		}
+		
+		//add bottom right fraction
+		if (xEndRemainder != 0 && yEndRemainder != 0) {
+			blackSum += (getCoordinateValue(xEndCeil, yEndCeil) == 0) ? yEndRemainder * xEndRemainder : 0;
+		}
+		
+		//calculate sum of center part
+		for (int y = yStartCeil; y < yEndFloor; y++) {
+			for (int x = xStartCeil; x < xEndFloor; x++) {
+				blackSum += (getCoordinateValue(x, y) == 0) ? 1: 0;
+			}
+		}
+		
+		float area = (xEnd - xStart) * (yEnd - yStart);
+		
+		return blackSum/area;
+	}	
 }
