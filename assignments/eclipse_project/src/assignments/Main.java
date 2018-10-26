@@ -27,6 +27,8 @@ public class Main {
 
 		// A4.run("segments2.jpg", 0.5f, "segments0_75.jpg");
 		
-		A5.run("2someWhite.jpg");
+		 // A5.run("digits.jpg");
+		
+		A6.run("digits.jpg", "digit_zoning_FVs.csv");
 	}
 }
