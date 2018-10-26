@@ -1,6 +1,7 @@
 package assignments;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -145,11 +146,11 @@ public class SegmentedImage extends Image {
 	
 	/* ----- A4 FUNCTIONS ----- */
 	
-	public GreyscaleImage scaleSegments(float scaleFactor) {
+	public GreyscaleImage scaleSegments(float scaleFactor, float minSizeFactor) {
 		GreyscaleImage orig = getGrayscaleImage();
 		GreyscaleImage processed = getGrayscaleImage();
 		
-		for (ImageBounds bounds : computeSegmentBounds()) {
+		for (ImageBounds bounds : computeSegmentBounds(minSizeFactor)) {
 			GreyscaleImage sub = orig.getSubImage(bounds);
 			GreyscaleImage scaled = sub.getScaledImage(scaleFactor);
 			
@@ -160,7 +161,7 @@ public class SegmentedImage extends Image {
 		return processed;
 	}
 	
-	private List<ImageBounds> computeSegmentBounds() {
+	private List<ImageBounds> computeSegmentBounds(float minSizeFactor) {
 		Map<Integer, ImageBounds> bounds = new HashMap<>();
 		
 		for (int y = 0; y < getHeight(); y++) {
@@ -179,22 +180,38 @@ public class SegmentedImage extends Image {
 			}
 		}
 		
-		return new ArrayList<>(bounds.values());
+		List<ImageBounds> boundsList = new ArrayList<ImageBounds>(bounds.values());
+		float minHeight = getHeight() * minSizeFactor;
+		float minWidth = getWidth() * minSizeFactor;
+		
+		int i = 0;
+		//remove segments smaller then requested (i.e. noise)
+		while (i < boundsList.size()) {
+			if (boundsList.get(i).getHeight() < minHeight || boundsList.get(i).getWidth() < minWidth) {
+				boundsList.remove(i);
+			} else {
+				i++;
+			}
+		}
+		
+		boundsList.sort(Comparator.comparing(ImageBounds::getMinY));
+		
+		return boundsList;
 	}
 	
 	/* ----- A5 FUNCTIONS ----- */
 	
 	//calculate zoning feature vectors for each segment
 	//3x3 zones
-	public List<ArrayList<Float>> calculateZoningFVs() {
+	public List<ArrayList<Float>> calculateZoningFVs(float minSegmentSizeFactor) {
 		List<ArrayList<Float>> zoningFVs = new ArrayList<ArrayList<Float>>();
 		GreyscaleImage orig = getGrayscaleImage();
 		
-		for (ImageBounds bounds : computeSegmentBounds()) {
+		for (ImageBounds bounds : computeSegmentBounds(minSegmentSizeFactor)) {
 			ArrayList<Float> zoningFeatures = new ArrayList<Float>(9);
 			zoningFVs.add(zoningFeatures);
 			
-			GreyscaleImage segment = orig.getSubImage(bounds);
+			GreyscaleImage segment = orig.getSubImage(bounds);			
 			float zoneWidth = (float) segment.getWidth()/3;
 			float zoneHeight = (float) segment.getHeight()/3;
 			

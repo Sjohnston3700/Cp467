@@ -16,7 +16,7 @@ public class A5 {
 		gs.convertToBW();
 		SegmentedImage segmented = new SegmentedImage(gs);
 		
-		List<ArrayList<Float>> zoningFVs = segmented.calculateZoningFVs();
+		List<ArrayList<Float>> zoningFVs = segmented.calculateZoningFVs((float) 0);
 		
 		for (int i = 0; i < zoningFVs.size(); i++) {
 			List<Float> zoningFeatures = zoningFVs.get(i);
