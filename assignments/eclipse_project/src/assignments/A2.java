@@ -9,10 +9,8 @@ public class A2 {
 	
 	public static void run(String originalFilename, String destFilename) throws IOException {
 		Image orig = new Image(originalFilename);
-		GreyscaleImage bAndW = new GreyscaleImage(orig);
-		bAndW.convertToBW();
-		
-		SegmentedImage labels = new SegmentedImage(bAndW);
+		GreyscaleImage gs = new GreyscaleImage(orig);		
+		SegmentedImage labels = new SegmentedImage(gs);
 		Map<Integer, Integer> segments = labels.getNumberPixelsPerSegment();
 		
 		int i = 1;
@@ -21,7 +19,7 @@ public class A2 {
 			i++;
 		}
 		
-		bAndW.saveToFile(destFilename);
+		labels.saveToFile(destFilename);
 		
 		ImageJPanel viewer = new ImageJPanel(originalFilename, destFilename);
 		viewer.display();

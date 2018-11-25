@@ -11,7 +11,8 @@ public class A4 {
 		GreyscaleImage gs = new GreyscaleImage(orig);
 		SegmentedImage segmented = new SegmentedImage(gs);
 		
-		GreyscaleImage scaled = segmented.scaleSegments(scaleFactor, (float) 0);
+		segmented.printImage();
+		GreyscaleImage scaled = segmented.scaleSegments(scaleFactor);
 		scaled.saveToFile(destFilename);
 		
 		ImageJPanel viewer = new ImageJPanel(originalFilename, destFilename);
