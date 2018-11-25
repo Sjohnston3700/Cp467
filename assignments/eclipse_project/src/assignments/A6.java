@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import assignments.Image.ImageBounds;
 
@@ -27,7 +26,7 @@ public class A6 {
 		int nZonesY = 3;
 		float minSegmentSizeFactor = 0.01f;
 
-		List<List<Float>> zoningFVs = new LinkedList<List<Float>>();
+		List<List<String>> zoningFVs = new LinkedList<>();
 		
 		int minSegWidth = (int) (segmented.getWidth() * minSegmentSizeFactor);
 		int minSegHeight = (int) (segmented.getHeight() * minSegmentSizeFactor);
@@ -37,7 +36,7 @@ public class A6 {
 		Collections.sort(bounds);
 		
 		for (ImageBounds b : bounds) {
-			List<Float> zoningFeatures = new ArrayList<Float>(nZonesX * nZonesY);
+			List<String> zoningFeatures = new ArrayList<>(nZonesX * nZonesY);
 			zoningFVs.add(zoningFeatures);
 			
 			BlackAndWhiteImage segment = segmented.getSubImage(b);
@@ -45,19 +44,19 @@ public class A6 {
 			
 			for (BlackAndWhiteImage zone : zones) {
 				float zoningFeature = zone.calculateZoningFeature();
-				zoningFeatures.add(zoningFeature);
+				zoningFeatures.add(String.valueOf(zoningFeature));
 			}
 		}
 			
 		// Save result to file
 		BufferedWriter fileWriter = new BufferedWriter(new FileWriter(outputFilename));
 		
-		for (int i = 0; i < zoningFVs.size(); i++) {
-			List<Float> zoningFeatures = zoningFVs.get(i);
-			
+		int id = 0;
+		for (List<String> zoningFeatures : zoningFVs) {			
 			//write in format: digit,feature0,...featureN\n
-			fileWriter.write(i + ",");
-			fileWriter.write(zoningFeatures.stream().map(String::valueOf).collect(Collectors.joining(",")));
+			fileWriter.write(String.valueOf(id++));
+			fileWriter.write(",");
+			fileWriter.write(String.join(",", zoningFeatures));
 			fileWriter.newLine();			
 		}
 		
