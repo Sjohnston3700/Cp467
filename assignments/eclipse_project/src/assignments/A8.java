@@ -12,5 +12,10 @@ public class A8 {
 		BlackAndWhiteImage bw = new BlackAndWhiteImage(orig);
 		bw.thin();
 		bw.saveToFile(outputFilename);
+		
+		ImageJPanel viewer = new ImageJPanel(originalFilename, outputFilename);
+		viewer.display();
 	}
+	
+	
 }

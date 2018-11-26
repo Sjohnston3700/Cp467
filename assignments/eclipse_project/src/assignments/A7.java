@@ -64,6 +64,9 @@ public class A7 {
 			String computedClass = segmentParsed.knClassify(K, classifications);
 			System.out.printf("Segment %d classified as: %s\n", i++, computedClass);
 		}
+		
+		ImageJPanel viewer = new ImageJPanel(testImageFilename);
+		viewer.display();
 	}
 	
 }
