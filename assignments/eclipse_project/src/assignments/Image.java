@@ -3,18 +3,15 @@ package assignments;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 
 public class Image {
-	protected static final int BLACK = 0;
-	protected static final int WHITE = 255;
 	protected static final int INVALID = -1;
-	protected static final int WHITE_TOLERANCE = 150;
 	
 	private int[] data;
 	private int width, height;
-	
 
 	public Image(String fileLocation) {
 		try {
@@ -36,13 +33,17 @@ public class Image {
 	}
 	
 	public Image(int width, int height) {
+		this(width, height, INVALID);
+	}
+		
+	public Image(int width, int height, int defaultValue) {
 		this.width = width;
 		this.height = height;
 		this.data = new int[width * height];
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				assignValue(x, y, INVALID);
+				assignValue(x, y, defaultValue);
 			}
 		}
 	}
@@ -55,14 +56,14 @@ public class Image {
 		return this.width;
 	}
 	
-	public int getCoordinateValue(int x, int y) {
+	protected int getCoordinateValue(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height)
 			return INVALID;
 		
 		return data[y * width + x];		
 	}
 	
-	public void assignValue(int x, int y, int value) {
+	protected void assignValue(int x, int y, int value) {
 		if (x < 0 || x >= width || y < 0 || y >= height) {
 			throw new IllegalArgumentException("Given coordinates are outside of bounds of image!");
 		}
@@ -89,7 +90,7 @@ public class Image {
 	public void printImage() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				System.out.print(getCoordinateValue(x, y) + " ");
+				System.out.printf("%03d ", getCoordinateValue(x, y));
 			}
 			System.out.println();
 		}
@@ -115,7 +116,7 @@ public class Image {
 	
 	/* ----- A4 FUNCTIONS ----- */
 	
-	protected class ImageBounds {
+	protected static class ImageBounds implements Comparable<ImageBounds> {
 		private int minX, minY, maxX, maxY;
 		
 		public ImageBounds(int x, int y) {
@@ -206,6 +207,46 @@ public class Image {
 		public int getCenterY() {
 			return minY + getHeight() / 2;
 		}
+		
+		public boolean intersectsX(ImageBounds other) {
+			return other.minX < this.maxX && other.maxX > this.minX;
+		}
+		
+		public boolean intersectsY(ImageBounds other) {
+			return other.minY < this.maxY && other.maxY > this.minY;
+		}
+		
+		public boolean intersects(ImageBounds other) {
+			return this.intersectsX(other) && this.intersectsY(other);
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("(%d, %d -> %d, %d)", minX, minY, maxX, maxY);
+		}
+		
+		@Override
+		public int compareTo(ImageBounds other) {
+			return DEFAULT.compare(this, other);
+		}
+		
+		/**
+		 * Sorts ImageBounds by occurrence as one would read top-down, left-to-right
+		 */
+		public static final Comparator<ImageBounds> TD_LTR = new Comparator<Image.ImageBounds>() {
+			@Override
+			public int compare(ImageBounds l, ImageBounds r) {
+				// If bounds intersect or no vertical intersection, take highest
+				if (l.intersects(r) || !l.intersectsY(r)) {
+					return l.minY - r.minY;
+				}
+				
+				// Otherwise, take leftmost
+				return l.minX - r.minX;
+			}
+		};
+		
+		public static final Comparator<ImageBounds> DEFAULT = TD_LTR;
 	}
 	
 	protected void clearArea(ImageBounds b) {
